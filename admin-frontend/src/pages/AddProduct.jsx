@@ -41,7 +41,7 @@ function AddProduct() {
       const token = localStorage.getItem("adminToken");
 
       const response = await axios.post(
-        "http://localhost:8000/api/v1/product",
+       `${import.meta.env.VITE_API_URL}/product`,
         data,
         {
           headers: {

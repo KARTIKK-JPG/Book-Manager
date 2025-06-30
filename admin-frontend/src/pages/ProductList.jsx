@@ -38,7 +38,7 @@ function ProductList() {
     try {
       const token = localStorage.getItem("adminToken");
 
-      await axios.delete(`http://localhost:8000/api/v1/product/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/product/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

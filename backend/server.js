@@ -10,10 +10,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-// ✅ add CORS here
+// ✅ Correct CORS config
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174"],
-  credentials: true
+  origin: [
+    "http://localhost:5173", 
+    "https://book-manager-frontend.vercel.app" 
+  ],
+  credentials: true,
 }));
 
 app.use(express.json());

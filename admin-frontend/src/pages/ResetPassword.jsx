@@ -14,7 +14,7 @@ function ResetPassword() {
 
     try {
       await axios.post(
-        `http://localhost:8000/api/v1/admin/reset-password/${token}`,
+        `${import.meta.env.VITE_API_URL}/admin/reset-password/${token}`,
         { newPassword }
       );
       setMessage("Password reset successfully!");

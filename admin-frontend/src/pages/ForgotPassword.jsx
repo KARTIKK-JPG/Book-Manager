@@ -10,7 +10,7 @@ function ForgotPassword() {
     setMessage("");
 
     try {
-      await axios.post("http://localhost:8000/api/v1/admin/forgot-password", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/admin/forgot-password`, {
         adminEmail: email,
       });
 

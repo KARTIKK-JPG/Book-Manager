@@ -43,7 +43,7 @@ function EditProduct() {
     try {
       const token = localStorage.getItem("adminToken");
       await axios.patch(
-        `http://localhost:8000/api/v1/product/${id}`,
+        `${import.meta.env.VITE_API_URL}/product/${id}`,
         product,
         {
           headers: {
