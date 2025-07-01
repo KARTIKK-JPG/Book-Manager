@@ -1,5 +1,4 @@
-import path from "path";
-import fs from "fs";
+import cloudinary from "../services/cloudinary.js";
 import productModel from "../models/productModel.js";
 
 export const addProduct = async (req, res) => {
@@ -9,12 +8,26 @@ export const addProduct = async (req, res) => {
       productDescription,
       productBrand,
       productPrice,
-      isBestseller
+      isBestseller,
     } = req.body;
 
     if (!req.file) {
-      return res.status(400).json({ message: "Product image is required" });
+      return res
+        .status(400)
+        .json({ message: "Product image is required" });
     }
+
+    // Upload image to Cloudinary
+    const uploadResult = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "bookmanager" },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
+      );
+      stream.end(req.file.buffer);
+    });
 
     const newProduct = await productModel.create({
       productName,
@@ -22,12 +35,18 @@ export const addProduct = async (req, res) => {
       productBrand,
       productPrice,
       isBestseller: isBestseller === "true",
-      productImage: req.file.path
+      productImage: uploadResult.secure_url,
+      cloudinaryPublicId: uploadResult.public_id,
     });
 
-    res.status(201).json({ message: "Product added successfully", product: newProduct });
+    res
+      .status(201)
+      .json({ message: "Product added successfully", product: newProduct });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
@@ -36,11 +55,12 @@ export const getAllProducts = async (req, res) => {
     const products = await productModel.find().sort({ createdAt: -1 });
     res.status(200).json({ products });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching products", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching products", error: error.message });
   }
 };
 
-// ✅ NEW: GET a single product by ID
 export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -53,10 +73,9 @@ export const getProductById = async (req, res) => {
 
     res.status(200).json({ product });
   } catch (error) {
-    res.status(500).json({
-      message: "Error fetching product",
-      error: error.message,
-    });
+    res
+      .status(500)
+      .json({ message: "Error fetching product", error: error.message });
   }
 };
 
@@ -72,14 +91,25 @@ export const updateProduct = async (req, res) => {
     const updates = { ...req.body };
 
     if (req.file) {
-      const oldImagePath = existingProduct.productImage;
-      const fullOldPath = path.resolve(oldImagePath);
-
-      if (fs.existsSync(fullOldPath)) {
-        fs.unlinkSync(fullOldPath);
+      // Delete old image from Cloudinary if it exists
+      if (existingProduct.cloudinaryPublicId) {
+        await cloudinary.uploader.destroy(existingProduct.cloudinaryPublicId);
       }
 
-      updates.productImage = req.file.path;
+      // Upload new image
+      const uploadResult = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "bookmanager" },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+
+      updates.productImage = uploadResult.secure_url;
+      updates.cloudinaryPublicId = uploadResult.public_id;
     }
 
     const updatedProduct = await productModel.findByIdAndUpdate(id, updates, {
@@ -87,9 +117,14 @@ export const updateProduct = async (req, res) => {
       runValidators: true,
     });
 
-    res.status(200).json({ message: "Product updated", product: updatedProduct });
+    res
+      .status(200)
+      .json({ message: "Product updated", product: updatedProduct });
   } catch (error) {
-    res.status(500).json({ message: "Error updating product", error: error.message });
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error updating product", error: error.message });
   }
 };
 
@@ -102,16 +137,20 @@ export const deleteProduct = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    const imagePath = path.resolve(product.productImage);
-
-    if (fs.existsSync(imagePath)) {
-      fs.unlinkSync(imagePath);
+    // Delete image from Cloudinary if it exists
+    if (product.cloudinaryPublicId) {
+      await cloudinary.uploader.destroy(product.cloudinaryPublicId);
     }
 
     await productModel.findByIdAndDelete(id);
 
-    res.status(200).json({ message: "Product and image deleted successfully" });
+    res
+      .status(200)
+      .json({ message: "Product and image deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting product", error: error.message });
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error deleting product", error: error.message });
   }
 };

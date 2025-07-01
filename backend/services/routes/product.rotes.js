@@ -18,3 +18,4 @@ router.patch("/product/:id", verifyAdmin, upload.single("productImage"), updateP
 router.delete("/product/:id", verifyAdmin, deleteProduct);
 
 export default router;
+
