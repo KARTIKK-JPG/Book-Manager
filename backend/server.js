@@ -31,6 +31,10 @@ app.use("/api/v1/admin", adminRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use("/api/v1", productRoute);
 
+app.get("/", (req, res) => {
+  res.send("Book Manager backend running!");
+});
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
