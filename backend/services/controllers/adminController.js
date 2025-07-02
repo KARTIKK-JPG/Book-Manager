@@ -89,7 +89,8 @@ export const requestPasswordReset = async (req, res) => {
     admin.resetTokenExpiry = resetTokenExpiry;
     await admin.save();
 
-    const resetLink = `http://localhost:5173/reset-password/${resetToken}`;
+    // ✅ Production reset link
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
     const html = `
       <h3>Password Reset Request</h3>
@@ -107,7 +108,7 @@ export const requestPasswordReset = async (req, res) => {
 
     res.status(200).json({
       message: "Password reset link sent to email.",
-      resetLink, // optional
+      resetLink, // optional for debugging
     });
   } catch (e) {
     console.error("Forgot Password Error:", e);
