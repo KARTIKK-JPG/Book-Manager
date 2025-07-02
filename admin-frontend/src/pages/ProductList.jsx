@@ -16,61 +16,51 @@ function ProductList() {
     try {
       const token = localStorage.getItem("adminToken");
 
-      const res = await axios.get("http://localhost:8000/api/v1/products", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/products`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setProducts(res.data.products);
     } catch (error) {
-      console.error(
-        "Error fetching products:",
-        error.response?.data || error.message
-      );
+      console.error("Error fetching products:", error.response?.data || error.message);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?")) {
-      return;
-    }
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
     try {
       const token = localStorage.getItem("adminToken");
-
-      await axios.delete(`${import.meta.env.VITE_API_URL}/product/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/product/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       alert("Product deleted successfully!");
       fetchProducts();
     } catch (error) {
-      console.error(
-        "Error deleting product:",
-        error.response?.data || error.message
-      );
+      console.error("Error deleting product:", error.response?.data || error.message);
       alert("Error deleting product.");
     }
   };
 
-  const handleEdit = (id) => {
-    navigate(`/admin/products/edit/${id}`);
-  };
+  const handleEdit = (id) => navigate(`/admin/products/edit/${id}`);
 
-  // Filter products based on search term
   const filteredProducts = products.filter((product) =>
-    product.productName
-      ?.toLowerCase()
-      .includes(searchTerm.trim().toLowerCase())
+    product.productName?.toLowerCase().includes(searchTerm.trim().toLowerCase())
   );
 
   return (
     <div className="p-4">
       <h1 className="text-4xl text-center mb-8 font-bold">Books List</h1>
 
-      {/* Search Box */}
       <div className="max-w-md mx-auto mb-8">
         <input
           type="text"
@@ -94,16 +84,17 @@ function ProductList() {
             className="border rounded-lg p-4 shadow hover:shadow-lg transition relative"
           >
             <img
-              src={`http://localhost:8000/${product.productImage}`}
+              src={`${import.meta.env.VITE_API_URL.replace(
+                "/api/v1",
+                ""
+              )}/${product.productImage}`}
               alt={product.productName}
               className="w-full h-48 object-cover rounded mb-4"
             />
             <h2 className="text-lg font-bold mb-1">
               {product.productName}
             </h2>
-            <p className="mb-1 text-gray-700">
-              {product.productBrand}
-            </p>
+            <p className="mb-1 text-gray-700">{product.productBrand}</p>
             <p className="text-green-700 font-bold">
               ₹ {product.productPrice}
             </p>
@@ -112,7 +103,6 @@ function ProductList() {
                 Bestseller
               </span>
             )}
-
             <div className="flex justify-end gap-2 mt-4">
               <button
                 onClick={() => handleEdit(product._id)}
