@@ -15,7 +15,6 @@ function ProductList() {
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/products`,
         {
@@ -24,7 +23,6 @@ function ProductList() {
           },
         }
       );
-
       setProducts(res.data.products);
     } catch (error) {
       console.error("Error fetching products:", error.response?.data || error.message);
@@ -87,7 +85,7 @@ function ProductList() {
               src={`${import.meta.env.VITE_API_URL.replace(
                 "/api/v1",
                 ""
-              )}/${product.productImage}`}
+              )}/uploads/${product.productImage}`}
               alt={product.productName}
               className="w-full h-48 object-cover rounded mb-4"
             />
