@@ -1,4 +1,5 @@
-import cloudinary from "../services/cloudinary.js";
+import cloudinary from "../cloudinary.js";
+
 
 import productModel from "../models/productModel.js";
 
