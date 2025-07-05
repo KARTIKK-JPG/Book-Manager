@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 8000;
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://book-manager-5z9q.vercel.app"
+    "https://book-manager-frontend-mu.vercel.app"
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
