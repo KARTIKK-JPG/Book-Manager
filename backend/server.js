@@ -13,13 +13,12 @@ const PORT = process.env.PORT || 8000;
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://book-manager-5z9q.vercel.app"
+    'https://book-manager-frontend-mu.vercel.app'
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
-
 
 app.use(express.json());
 
@@ -30,6 +29,10 @@ db();
 app.use("/api/v1/admin", adminRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use("/api/v1", productRoute);
+
+app.get("/", (req, res) => {
+  res.send("Book Manager backend running!");
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
