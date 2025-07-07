@@ -66,11 +66,80 @@ function EditProduct() {
   return (
     <div className="max-w-xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Edit Product</h1>
-      <form onSubmit={handleSubmit}>
-        {/* Input fields unchanged */}
+  
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium mb-1">Name</label>
+          <input
+            type="text"
+            name="productName"
+            value={product.productName || ""}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded p-2"
+            required
+          />
+        </div>
+  
+        <div>
+          <label className="block text-sm font-medium mb-1">Description</label>
+          <textarea
+            name="productDescription"
+            value={product.productDescription || ""}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded p-2"
+            required
+          ></textarea>
+        </div>
+  
+        <div>
+          <label className="block text-sm font-medium mb-1">Brand</label>
+          <input
+            type="text"
+            name="productBrand"
+            value={product.productBrand || ""}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded p-2"
+            required
+          />
+        </div>
+  
+        <div>
+          <label className="block text-sm font-medium mb-1">Price</label>
+          <input
+            type="number"
+            name="productPrice"
+            value={product.productPrice || ""}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded p-2"
+            required
+          />
+        </div>
+  
+        <div className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            name="isBestseller"
+            checked={product.isBestseller || false}
+            onChange={(e) =>
+              setProduct({
+                ...product,
+                isBestseller: e.target.checked,
+              })
+            }
+          />
+          <label className="text-sm">Bestseller</label>
+        </div>
+  
+        <button
+          type="submit"
+          className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+        >
+          Update Product
+        </button>
       </form>
     </div>
   );
+  
 }
 
 export default EditProduct;
