@@ -6,11 +6,11 @@ import {
   resetPassword,
 } from "../controllers/adminController.js";
 
-const router = express.Router();
+const adminRoutes = express.Router();
 
-router.post("/register", registerAdmin);
-router.post("/login", loginAdmin);
-router.post("/forgot-password", requestPasswordReset);
-router.post("/reset-password/:token", resetPassword);
+adminRoutes.post("/register", registerAdmin);
+adminRoutes.post("/login", loginAdmin);
+adminRoutes.post("/forgot-password", requestPasswordReset);
+adminRoutes.post("/reset-password/:token", resetPassword);
 
-export default router;
+export default adminRoutes;
