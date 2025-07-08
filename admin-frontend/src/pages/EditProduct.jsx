@@ -69,7 +69,7 @@ function EditProduct() {
   
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Name</label>
+          <label className="block text-sm font-medium mb-1">Book Name</label>
           <input
             type="text"
             name="productName"
@@ -92,7 +92,7 @@ function EditProduct() {
         </div>
   
         <div>
-          <label className="block text-sm font-medium mb-1">Brand</label>
+          <label className="block text-sm font-medium mb-1">Author</label>
           <input
             type="text"
             name="productBrand"
