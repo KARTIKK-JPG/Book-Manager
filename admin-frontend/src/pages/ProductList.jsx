@@ -82,10 +82,7 @@ function ProductList() {
             className="border rounded-lg p-4 shadow hover:shadow-lg transition relative"
           >
             <img
-              src={`${import.meta.env.VITE_API_URL.replace(
-                "/api/v1",
-                ""
-              )}/uploads/${product.productImage}`}
+              src={product.productImage || "/no-image.png"}
               alt={product.productName}
               className="w-full h-48 object-cover rounded mb-4"
             />
